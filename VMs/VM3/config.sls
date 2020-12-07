@@ -54,7 +54,29 @@ routesETH2:
         gateway: fc00:1234:4::36
 
 
+
+## Installation de inetutils-inetd
+inetutils-inetd:
+  pkg:
+    - installed
+  service:
+    - running
+    - enable: True
+
+netcat6:
+  pkg:
+    - installed
+
 ## Suppression de la passerelle par défaut
 ip route del default:
+  cmd:
+    - run
+
+## Ajout dans la BDD de inetd
+update-inetd --add "echo stream tcp6 nowait nobody internal":
+  cmd:
+    - run
+
+service inetutils-inetd restart:
   cmd:
     - run

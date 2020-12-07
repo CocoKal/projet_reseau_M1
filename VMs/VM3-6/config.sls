@@ -48,7 +48,15 @@ routes:
         gateway: fc00:1234:2::26
 
 
-## Enable ipv6 forwarding
+## Installation de inetutils-inetd
+inetutils-inetd:
+  pkg:
+    - installed
+  service:
+    - running
+    - enable: True
+
+## But enable ipv6 forwarding
 net.ipv6.conf.all.forwarding:
   sysctl:
     - present
@@ -56,5 +64,14 @@ net.ipv6.conf.all.forwarding:
 
 ## Suppression de la passerelle par défaut
 ip route del default:
+  cmd:
+    - run
+
+## Ajout dans la BDD de inetd
+update-inetd --add "echo stream tcp6 nowait nobody internal":
+  cmd:
+    - run
+
+service inetutils-inetd restart:
   cmd:
     - run
