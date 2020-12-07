@@ -19,7 +19,7 @@ int tun_alloc(char *dev) {
 
   if( (fd = open("/dev/net/tun", O_RDWR)) < 0 ) {
     perror("alloc tun");
-    exit(1);
+    return -1;
   }
 
   memset(&ifr, 0, sizeof(ifr));
@@ -30,8 +30,7 @@ int tun_alloc(char *dev) {
    *        IFF_NO_PI - Do not provide packet information
    */
   ifr.ifr_flags = IFF_TUN;
-  if( *dev )
-    strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+  if( *dev ) strncpy(ifr.ifr_name, dev, IFNAMSIZ);
 
   if( (err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0 ) {
     close(fd);
@@ -41,22 +40,20 @@ int tun_alloc(char *dev) {
   return fd;
 }
 
-void write_in_fd(int src, int dst) {
+int write_in_fd(int src, int dst) {
   char buffer[1500];
   int nread;
-  while(1) {
 
-    /* Note that "buffer" should be at least the MTU size of the interface, eg 1500   bytes */
-    nread = read(src,buffer,sizeof(buffer));
+  /* Note that "buffer" should be at least the MTU size of the interface, eg 1500   bytes */
+  nread = read(src,buffer,sizeof(buffer));
 
-    if(nread < 0) {
-      perror("Reading from interface");
-      break;
-    }
-
-    write(dst, buffer, nread);
+  if(nread < 0) {
+    perror("Reading from interface");
+    return -1;
   }
-  close(src);
-  close(dst);
 
+  write(dst, buffer, nread);
+
+  return 0;
 }
+
