@@ -29,15 +29,8 @@ eth2:
     - ipaddr: 172.16.2.162
     - netmask: 28
 
-## No need to add routes
-
 ## But enable ipv4 forwarding
 net.ipv4.ip_forward:
   sysctl:
     - present
     - value: 1
-
-
-
-
-

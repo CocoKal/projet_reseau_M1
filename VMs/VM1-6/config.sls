@@ -22,7 +22,7 @@ eth1:
     - ipv6proto: static
     - enable_ipv6: true
     - ipv6_autoconf: no
-    - ipv6ipaddr: fc00:1234:1::1
+    - ipv6ipaddr: fc00:1234:1::16
     - ipv6netmask: 64
 
 eth2:
@@ -37,21 +37,19 @@ eth2:
     - ipv6ipaddr: fc00:1234:3::16
     - ipv6netmask: 64
 
-## Configuration de la route vers LAN2 via VM2
+## Configuration des routes :
 routes:
   network.routes:
     - name: eth1
     - routes:
       - name: LAN2-6
         ipaddr: fc00:1234:2::/64
-        gateway: fc00:1234:1::2
-    - name: eth2
-    - routes:
-      - name: LAN3-6
-        ipaddr: fc00:1234:3::/64
-        gateway: fc00:1234:3::1
+        gateway: fc00:1234:1::26
+      - name: LAN4-6
+        ipaddr: fc00:1234:4::/64
+        gateway: fc00:1234:1::26
 
-## But enable ipv6 forwarding
+## Enable ipv6 forwarding
 net.ipv6.conf.all.forwarding:
   sysctl:
     - present
